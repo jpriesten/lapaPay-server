@@ -1,0 +1,21 @@
+{
+  "name": "labapay",
+  "version": "1.0.0",
+  "description": "A digital payment and cash transfer application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "payment",
+    "digitalpayment",
+    "cash",
+    "transfer"
+  ],
+  "author": "TjeY",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
