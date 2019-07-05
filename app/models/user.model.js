@@ -1,17 +1,28 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
+let salt = 10;
 const User = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
-    phoneNumber: Number,
-    address: String,
-    country: String,
+    phoneNumber: {
+        type: Number,
+    },
+    address: {
+        type: String,
+        trim: true
+    },
+    country: {
+        type: String
+    },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true
     },
     password: {
         type: String,
@@ -19,6 +30,21 @@ const User = mongoose.Schema({
     }
 }, {
     timestamps: true
+});
+
+User.pre('save', function(next){
+    let user = this;
+    if (user.password != undefined){
+        bcrypt.hash(user.password, salt, (err, hash) => {
+            if (err){
+                next(err);
+            }
+            user.password = hash;
+            next();
+        });
+    } else {
+        console.error(user.password +''+ User.password)
+    }
 });
 
 module.exports = mongoose.model('User', User);
