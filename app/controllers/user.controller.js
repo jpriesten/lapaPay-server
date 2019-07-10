@@ -2,28 +2,22 @@ const User = require('../models/user.model.js');
 
 // Create and Save a new User
 exports.create = (req, res) => {
-    // Validate the request
-    if(!req.body.name && !req.body.email && !req.body.password) {
-        return res.status(400).send({
-            message: "User content can not be empty"
-        });
-    }
-    // Create a user
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    });
 
-    // Save user to database
-    user.save()
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the Note."
-        });
+    // Get user information from request
+    const user = new User(req.body);
+
+    User.init().then(async () => {
+        try {
+            // Save the user to db, generate a token and send it back as response
+            const token = await user.newAuthToken();
+            res.status(201).send({token});
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }).catch(error => {
+        res.status(400).send(error);
     });
+    
 };
 
 // Retrieve and return all users from the database.
