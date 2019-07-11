@@ -3,7 +3,10 @@ module.exports = (app) => {
     const authenticate = require('../middlewares/authenticator.middleware');
 
     // Create a new User
-    app.post('/users', authenticate, users.create);
+    app.post('/users/create', users.create);
+
+    // Login a user
+    app.post('/users/login', users.login);
 
     // Retrieve all Users
     app.get('/users', authenticate, users.findAll);

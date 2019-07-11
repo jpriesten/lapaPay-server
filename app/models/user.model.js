@@ -4,7 +4,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 
 let salt = 10;
-const User = mongoose.Schema({
+const UserSchema = mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -57,7 +57,7 @@ const User = mongoose.Schema({
 });
 
 // Salt and hash passwords before saving to db
-User.pre('save', function(next){
+UserSchema.pre('save', function(next){
     let user = this;
     if (user.password != undefined){
         bcrypt.hash(user.password, salt, (err, hash) => {
@@ -68,12 +68,31 @@ User.pre('save', function(next){
             next();
         });
     } else {
-        console.error(user.password +''+ User.password)
+        console.error(user.password +''+ UserSchema.password)
     }
 });
 
+UserSchema.methods.checkValidCredentials = async (email, password) => {
+    try {
+        const user = await User.findOne({email});
+        if(!user){
+            throw new Error('User ' + email +' not found');
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if(!isMatch){
+            throw new Error('Wrong email or password');
+        }
+        return user;
+
+    } catch (error) {
+        return {"status": true, "error": error.message};
+    }
+    
+}
+
 // Create an authentication token for a user then saving the user
-User.methods.newAuthToken = async function(){
+UserSchema.methods.newAuthToken = async function(){
     try {
         const user  = this;
         const token =  jwt.sign({ _id: user.id.toString() },'thisismyjwttoken', {expiresIn: "10h"});
@@ -85,4 +104,5 @@ User.methods.newAuthToken = async function(){
     }
 }
 
-module.exports = mongoose.model('User', User);
+const User = mongoose.model('User', UserSchema);
+module.exports = User;

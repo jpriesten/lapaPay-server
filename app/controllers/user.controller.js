@@ -20,6 +20,25 @@ exports.create = (req, res) => {
     
 };
 
+// Login a user
+exports.login = async (req, res) => {
+    // Get user information from request
+    const user = new User(req.body);
+    try {
+        const authenticatedUser  = await user.checkValidCredentials(req.body.email, req.body.password);
+        if(authenticatedUser.status){
+            res.status(400).send({"error": authenticatedUser.error});
+        } else {
+            const token = await authenticatedUser.newAuthToken();
+            console.log(req.body);
+            res.send({ "user": authenticatedUser, token});
+        }
+        
+    } catch(error) {
+        res.status(400).send({error});
+    }
+};
+
 // Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
     User.find()
