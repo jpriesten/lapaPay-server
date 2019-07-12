@@ -1,4 +1,4 @@
-const User = require('../models/user.model.js');
+const User = require('../models/user.model');
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -10,6 +10,12 @@ exports.create = (req, res) => {
         try {
             // Save the user to db, generate a token and send it back as response
             const token = await user.newAuthToken();
+            if(token.error == true){
+                console.log("Error_True", token);
+            }
+            if(token.error == false){
+                console.log("Error_False", token);
+            }
             res.status(201).send({token});
         } catch (error) {
             res.status(400).send(error);
@@ -23,18 +29,23 @@ exports.create = (req, res) => {
 // Login a user
 exports.login = async (req, res) => {
     // Get user information from request
-    const user = new User(req.body);
+    const requestUser = new User(req.body);
     try {
-        const authenticatedUser  = await user.checkValidCredentials(req.body.email, req.body.password);
-        if(authenticatedUser.status){
-            res.status(400).send({"error": authenticatedUser.error});
-        } else {
-            const token = await authenticatedUser.newAuthToken();
+        let user  = await requestUser.checkValidCredentials(req.body.email.trim(), req.body.password.trim());
+        console.log(user);
+        if(user.error == true){
+            console.log("In failed");
+            res.status(400).send({user});
+        } 
+        if(user.error == false){
+            console.log("in success");
+            const token = await user.results.newAuthToken();
             console.log(req.body);
-            res.send({ "user": authenticatedUser, token});
+            res.status(201).send({token});
         }
         
     } catch(error) {
+        console.log("in Error", error);
         res.status(400).send({error});
     }
 };

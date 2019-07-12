@@ -3,7 +3,8 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
-const logger = require('./app/logging/logs')
+const logger = require('./app/logging/logs');
+const cors = require('cors');
 
 // create express app
 const app = express();
@@ -29,6 +30,10 @@ mongoose.connect(dbConfig.url, {
 });
 
 app.use(logger.requestLogger);
+
+// Enable CORS globally
+app.use(cors());
+
 // define a simple route
 app.get('/', (req, res) => {
     res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
@@ -39,5 +44,5 @@ require ('./app/routes/user.routes') (app);
 app.use(logger.errorLogger);
 // listen for requests
 app.listen(port, () => {
-    console.log("Server is listening on port 3000");
+    console.log("CORS-enabled Server is listening on port", port);
 });

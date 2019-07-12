@@ -40,7 +40,7 @@ const UserSchema = mongoose.Schema({
             if(validator.isEmpty(value)){
                 throw new Error('Please enter your password!');
             }else if(validator.equals(value.toLowerCase(),"password")){
-                throw new Error('Password is invalid!');
+                throw new Error('Password should not be "password"!');
             }else if(validator.contains(value.toLowerCase(), "password")){
                 throw new Error('Password should not contain "password"!');
             } 
@@ -72,21 +72,29 @@ UserSchema.pre('save', function(next){
     }
 });
 
+UserSchema.pre('remove', async function(next){
+    const user = this
+    // await Post.deleteMany({author: user._id})
+    next()
+})
+
 UserSchema.methods.checkValidCredentials = async (email, password) => {
     try {
-        const user = await User.findOne({email});
+        let user = await User.findOne({email});
+        console.log(user);
         if(!user){
             throw new Error('User ' + email +' not found');
         }
-        const isMatch = await bcrypt.compare(password, user.password);
+        
+        let isMatch = bcrypt.compareSync(password.toString(), user.password.toString());
 
         if(!isMatch){
             throw new Error('Wrong email or password');
         }
-        return user;
+        return {"error": false, "results": user};
 
     } catch (error) {
-        return {"status": true, "error": error.message};
+        return {"error": true, "results": error.message};
     }
     
 }
@@ -95,13 +103,23 @@ UserSchema.methods.checkValidCredentials = async (email, password) => {
 UserSchema.methods.newAuthToken = async function(){
     try {
         const user  = this;
-        const token =  jwt.sign({ _id: user.id.toString() },'thisismyjwttoken', {expiresIn: "10h"});
+        let token =  jwt.sign({ _id: user.id.toString() },'thisismyjwttoken', {expiresIn: "10h"});
         user.tokens = user.tokens.concat({ token });
         await user.save();
-        return token;
+        return {"error": false, "results": token};
     } catch (error) {
-        return error;
+        return {"error": true, "results": error};
     }
+}
+
+UserSchema.methods.toJSON = function(){
+    const user = this
+    const userObj = user.toObject()
+
+    delete userObj.password
+    delete userObj.tokens
+
+    return userObj
 }
 
 const User = mongoose.model('User', UserSchema);
