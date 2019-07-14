@@ -56,7 +56,7 @@ exports.logout = async (req, res) => {
         })
 
         await req.user.save();
-        res.status(201).send("LOGGED OUT!");
+        res.status(201).send({"error": false, "results": "LOGGED OUT!"});
     } catch (error) {
         res.status(500).send({error});
     }
