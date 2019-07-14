@@ -48,6 +48,21 @@ exports.login = async (req, res) => {
     }
 };
 
+// Log user out
+exports.logout = async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter((token) =>{
+         return token.token !== req.token; 
+        })
+        console.log("Token: ", req.user.tokens, " => ", req.token);
+
+        await req.user.save();
+        res.status(201).send("LOGGED OUT!");
+    } catch (error) {
+        res.status(500).send({error});
+    }
+};
+
 // Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
     User.find()

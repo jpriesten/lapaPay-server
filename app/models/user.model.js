@@ -106,7 +106,7 @@ UserSchema.methods.checkValidCredentials = async (email, password) => {
 UserSchema.methods.newAuthToken = async function(){
     try {
         const user  = this;
-        let token =  jwt.sign({ _id: user.id.toString() },'thisismyjwttoken', {expiresIn: "10h"});
+        let token =  jwt.sign({ _id: user.id.toString() },'thisismyjwttoken', {expiresIn: "24h"});
         user.tokens = user.tokens.concat({ token });
         await user.save();
         return {"error": false, "results": token};

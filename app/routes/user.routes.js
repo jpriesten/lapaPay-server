@@ -8,6 +8,9 @@ module.exports = (app) => {
     // Login a user
     app.post('/users/login', users.login);
 
+    // Login a user out
+    app.post('/users/logout', authenticate, users.logout);
+
     // Retrieve all Users
     app.get('/users', authenticate, users.findAll);
 
