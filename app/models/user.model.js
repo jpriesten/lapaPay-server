@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 
-let salt = 10;
+const salt = bcrypt.genSaltSync(10);
 const UserSchema = mongoose.Schema({
     name: {
         type: String,
@@ -60,13 +60,17 @@ const UserSchema = mongoose.Schema({
 UserSchema.pre('save', function(next){
     let user = this;
     if (user.password != undefined){
-        bcrypt.hash(user.password, salt, (err, hash) => {
-            if (err){
-                next(err);
-            }
-            user.password = hash;
-            next();
-        });
+        if(user.isModified("password") || user.isNew) {
+            bcrypt.hash(user.password, salt, (err, hash) => {
+                if (err){
+                    next(err);
+                }
+                user.password = hash;
+                next();
+            });
+        } else {
+            return next();
+        }
     } else {
         console.error(user.password +''+ UserSchema.password)
     }
@@ -81,12 +85,11 @@ UserSchema.pre('remove', async function(next){
 UserSchema.methods.checkValidCredentials = async (email, password) => {
     try {
         let user = await User.findOne({email});
-        console.log(user);
         if(!user){
             throw new Error('User ' + email +' not found');
         }
         
-        let isMatch = bcrypt.compareSync(password.toString(), user.password.toString());
+        let isMatch = await bcrypt.compare(password, user.password);
 
         if(!isMatch){
             throw new Error('Wrong email or password');
@@ -108,7 +111,7 @@ UserSchema.methods.newAuthToken = async function(){
         await user.save();
         return {"error": false, "results": token};
     } catch (error) {
-        return {"error": true, "results": error};
+        return {"error": true, "results": error.message};
     }
 }
 

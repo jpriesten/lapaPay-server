@@ -31,17 +31,15 @@ exports.login = async (req, res) => {
     // Get user information from request
     const requestUser = new User(req.body);
     try {
-        let user  = await requestUser.checkValidCredentials(req.body.email.trim(), req.body.password.trim());
-        console.log(user);
+        let user  = await requestUser.checkValidCredentials(req.body.email, req.body.password);
         if(user.error == true){
             console.log("In failed");
-            res.status(400).send({user});
+            res.status(201).send({"token": user});
         } 
         if(user.error == false){
             console.log("in success");
-            const token = await user.results.newAuthToken();
-            console.log(req.body);
-            res.status(201).send({token});
+            const loginToken = await user.results.newAuthToken();
+            res.status(201).send({"token": {loginToken, user}});
         }
         
     } catch(error) {
