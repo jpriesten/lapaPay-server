@@ -3,7 +3,7 @@ const User = require('../models/user.model');
 
 const auth = async (req,res,next) => {
     try {
-        const token = req.header('Authorization').trim();
+        const token = req.header('Authorization').replace('Bearer', '').trim();
         
         const decoded  = jwt.verify(token, 'thisismyjwttoken');
 
@@ -17,7 +17,7 @@ const auth = async (req,res,next) => {
         next();
     } catch (error) {
         console.log(error);
-        res.status(401).send({error:'Please authenticate!'});
+        res.status(401).send({error: true, code: 13579, results: 'Please authenticate!'});
     }
 }
 
