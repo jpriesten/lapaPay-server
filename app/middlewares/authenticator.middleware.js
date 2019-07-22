@@ -17,7 +17,8 @@ const auth = async (req,res,next) => {
         next();
     } catch (error) {
         console.log(error);
-        res.status(401).send({error: true, code: 13579, results: 'Please authenticate!'});
+        res.status(401).send({error: true, code: 13579, results: 'Please authenticate!',
+         message: error.message});
     }
 }
 
