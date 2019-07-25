@@ -32,7 +32,13 @@ mongoose.connect(dbConfig.url, {
 app.use(logger.requestLogger);
 
 // Enable CORS globally
-app.use(cors());
+const corsOptions = {
+    // origin: ['http://localhost:8100', 'http://192.168.8.108:8100', 'http://0.0.0.0:8100', 'https://labapay-client.firebaseapp.com'],
+    origin: '*', 
+    allowedHeaders: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,Origin,Accept,Access-Control-Allow-Headers,Access-Control-Allow-Methods,Access-Control-Allow-Origin',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE' 
+}
+app.use(cors(corsOptions));
 
 // define a simple route
 app.get('/', (req, res) => {
