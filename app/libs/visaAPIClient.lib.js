@@ -1,7 +1,7 @@
 const request = require('request');
 const fs = require('fs');
 const config = require('../../config/visa.config');
-// var randomstring = require('randomstring');
+var randomstring = require('randomstring');
 
 function logRequest(requestBody, path) {
 	console.log("URL : " + config.visaUrl + path);
@@ -34,7 +34,7 @@ VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, method
 	let keyFile = config.key;
     let certificateFile = config.cert;
     let keyStore = config.keyStore;
-	logRequest(requestBody, path);
+	// logRequest(requestBody, path);
 
 	if (methodType === 'POST' || methodType === 'PUT') {
 		headers['Content-Type'] = 'application/json';
@@ -42,7 +42,7 @@ VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, method
 
 	headers['Accept'] = 'application/json';
 	headers['Authorization'] = getBasicAuthHeader(userId, password);
-	// headers['x-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
+	headers['x-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
 	request({
 		uri : config.visaUrl + path,
 		key: fs.readFileSync(keyFile),
@@ -53,10 +53,9 @@ VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, method
 		timeout: 30000
 	}, function(error, response, body) {
 		if (!error) {
-			logResponseBody(response, body);
-			callback(null, response.statusCode);
+			callback(null, response);
 		} else {
-			console.log(error);
+			console.log("Error", error);
 			callback(error);
 		}
 	});

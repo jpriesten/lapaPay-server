@@ -5,6 +5,7 @@ const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
 const logger = require('./app/logging/logs');
 const cors = require('cors');
+// const cardValidator = require('./app/middlewares/cardValidation');
 
 // create express app
 const app = express();
@@ -42,10 +43,13 @@ app.use(cors(corsOptions));
 
 // define a simple route
 app.get('/', (req, res) => {
-    res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
+    res.json({"message": "Welcome to labapay server application."});
 });
 
+// User routes
 require ('./app/routes/user.routes') (app);
+// Transaction routes
+require ('./app/routes/visa.routes') (app);
 
 app.use(logger.errorLogger);
 // listen for requests

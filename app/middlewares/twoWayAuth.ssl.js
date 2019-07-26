@@ -1,6 +1,6 @@
 const request = require('request');
 const req = request.defaults();
-const fs = requir('fs');
+const fs = require('fs');
 const config = require('../../config/visa.config');
 const VisaAPIClient = require('../libs/visaAPIClient.lib');
 const assert = require('chai').assert;
