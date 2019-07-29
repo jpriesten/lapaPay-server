@@ -1,9 +1,6 @@
 module.exports = (app) => {
     const users = require('../controllers/user.controller.js');
-    // const visa = require('../controllers/visa.controller');
     const authenticate = require('../middlewares/authenticator.middleware');
-
-    // app.post('/validate-account', visa.validateAccount);
 
     // Create a new User
     app.post('/users/create', users.create);

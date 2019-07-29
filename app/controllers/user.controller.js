@@ -2,7 +2,6 @@ const User = require('../models/user.model');
 
 // Create and Save a new User
 exports.create = (req, res) => {
-
     // Get user information from request
     const user = new User(req.body);
 
@@ -23,7 +22,6 @@ exports.create = (req, res) => {
     }).catch(error => {
         res.status(400).send(error);
     });
-    
 };
 
 // Login a user

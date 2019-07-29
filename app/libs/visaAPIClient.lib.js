@@ -42,7 +42,7 @@ VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, method
 
 	headers['Accept'] = 'application/json';
 	headers['Authorization'] = getBasicAuthHeader(userId, password);
-	headers['x-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'
+	headers['x-correlation-id'] = randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC';
 	request({
 		uri : config.visaUrl + path,
 		key: fs.readFileSync(keyFile),

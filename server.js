@@ -5,7 +5,6 @@ const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
 const logger = require('./app/logging/logs');
 const cors = require('cors');
-// const cardValidator = require('./app/middlewares/cardValidation');
 
 // create express app
 const app = express();
