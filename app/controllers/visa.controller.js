@@ -150,7 +150,7 @@ exports.getPushFund = (req, res) => {
         visaAPIClient.doMutualAuthRequest(baseUri + resourcePath.push_transaction + '/138466034806961', JSON.stringify({}), req.method, {},
         function(err, response) {
             if(!err) {
-                console.log("Success: ", (response));
+                console.log("Success: ", JSON.parse(response.body));
             } else {
                 console.error("Failed: ", err);
                 throw new Error(err);
