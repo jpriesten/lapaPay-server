@@ -15,7 +15,7 @@ module.exports = (app) => {
     app.get('/users', authenticate, users.findAll);
 
     // Retrieve a single User with userId
-    app.get('/users/:userId', users.findOne);
+    app.get('/users/me', authenticate, users.findOne);
 
     // Update aUser with userId
     app.put('/users/:userId', users.update);
