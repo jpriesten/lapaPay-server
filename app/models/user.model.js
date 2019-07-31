@@ -12,13 +12,23 @@ const UserSchema = mongoose.Schema({
     },
     phoneNumber: {
         type: Number,
+        required: true,
+        trim: true
     },
     address: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     country: {
-        type: String
+        type: String,
+        required: true,
+        trim: true
+    },
+    city: {
+        type: String,
+        required: true,
+        trim: true
     },
     email: {
         type: String,
