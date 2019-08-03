@@ -1,5 +1,8 @@
 const VisaAPIClient = require('../libs/visaAPIClient.lib');
 const Account = require('../models/account.model');
+const Crypto = require('simple-crypto-js').default;
+
+const crypto = new Crypto('out-of-the-box');
 
 const baseUri = 'visadirect/';
 const resourcePath = {
@@ -18,17 +21,33 @@ exports.createVirtualCard = (req, res) => {
     Account.init().then(async () => {
         try {
             await account.save();
-            res.status(201).send({account});
+            account.accountNumber = crypto.encrypt(account.accountNumber);
+            res.status(201).send({"error": false, "result": 'Created Successfully'});
         } catch (error) {
             console.log(account, error);
-            res.status(400).send({"error": error.message});
+            res.status(400).send({"error": true, "result": error.message});
         }
     }).catch(error => {
         console.error(error);
-        res.status(400).send({"error": error.message});
+        res.status(400).send({"error": true, "result": error.message});
     });
 
 };
+
+exports.getCard = async (req, res) => {
+    try {
+        const cards = await Account.find({userID: req.user._id});
+        cards.forEach(card => {
+            card.accountNumber = crypto.encrypt(card.accountNumber);
+        });
+        console.log(cards);
+        res.status(201).send({"error": false, "result": cards});
+    } catch (error) {
+        console.log("Errors", error);
+        res.status(401).send({error: true, code: 13589, results: 'Can\'t get Card Details',
+         message: error.message});
+    }
+}
 
 // Pull funds in a transaction process
 exports.pullFunds = (req, res) => {

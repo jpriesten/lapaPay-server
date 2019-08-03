@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validate = require('validator');
 const Crypto = require('simple-crypto-js').default;
 
-let crypto = new Crypto('out-of-the-box');
+const crypto = new Crypto('out-of-the-box');
 
 const AccountSchema = mongoose.Schema({
     userID: {

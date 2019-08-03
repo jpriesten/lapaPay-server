@@ -15,5 +15,8 @@ module.exports = (app) => {
     app.get('/transactions/get-push-fund', authenticate, visa.getPushFund);
 
     // Create a new virtual card
-    app.post('/cards/new-card', authenticate, visa.createVirtualCard);
+    app.post('/cards/new', authenticate, visa.createVirtualCard);
+
+    // Get cards by user
+    app.get('/cards', authenticate, visa.getCard);
 }
