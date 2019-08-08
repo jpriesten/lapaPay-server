@@ -18,5 +18,8 @@ module.exports = (app) => {
     app.post('/cards/new', authenticate, visa.createVirtualCard);
 
     // Get cards by user
-    app.get('/cards', authenticate, visa.getCard);
+    app.get('/cards', authenticate, visa.getCards);
+
+    // Delete a card
+    app.delete('/card', authenticate, visa.deleteCard);
 }

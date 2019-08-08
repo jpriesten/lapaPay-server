@@ -34,17 +34,30 @@ exports.createVirtualCard = (req, res) => {
 
 };
 
-exports.getCard = async (req, res) => {
+exports.getCards = async (req, res) => {
     try {
         const cards = await Account.find({userID: req.user._id});
         cards.forEach(card => {
             card.accountNumber = crypto.encrypt(card.accountNumber);
         });
-        console.log(cards);
+        // console.log(cards);
         res.status(201).send({"error": false, "result": cards});
     } catch (error) {
         console.log("Errors", error);
         res.status(401).send({error: true, code: 13589, results: 'Can\'t get Card Details',
+         message: error.message});
+    }
+}
+
+exports.deleteCard = async (req, res) => {
+    try {
+        const cardNumber = req.body.cardNumber;
+        let deleteResult = await Account.findOneAndDelete({accountNumber: cardNumber});
+        console.log(deleteResult);
+        res.status(201).send({"error": false, "result": deleteResult});
+    } catch (error) {
+        console.log("Errors", error);
+        res.status(401).send({error: true, code: 13589, results: 'Can\'t delete Card',
          message: error.message});
     }
 }
