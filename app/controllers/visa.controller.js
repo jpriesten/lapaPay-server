@@ -70,7 +70,7 @@ exports.pullFunds = (req, res) => {
     let pullFundsRequest = JSON.stringify({
         "acquirerCountryCode": "840",
         "acquiringBin": "408999",
-        "amount": "124.02",
+        "amount": "200",
         "businessApplicationId": "AA",
         "cardAcceptor": {
           "address": {
@@ -87,9 +87,9 @@ exports.pullFunds = (req, res) => {
         "foreignExchangeFeeTransaction": "11.99",
         "localTransactionDateTime": strDate,
         "retrievalReferenceNumber": "330000550000",
-        "senderCardExpiryDate": "2015-10",
-        "senderCurrencyCode": "USD",
-        "senderPrimaryAccountNumber": "4895142232120006",
+        "senderCardExpiryDate": "2020-03",
+        "senderCurrencyCode": "CAD",
+        "senderPrimaryAccountNumber": "4957030005123354",
         "surcharge": "11.99",
         "systemsTraceAuditNumber": "451001",
           "merchantCategoryCode": 6012
@@ -179,7 +179,7 @@ exports.getPushFund = (req, res) => {
     // push funds request
     try {
         console.log("Method: ", req.method);
-        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath.push_transaction + '/138466034806961', JSON.stringify({}), req.method, {},
+        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath.push_transaction + '/200985903051684', JSON.stringify({}), req.method, {},
         function(err, response) {
             if(!err) {
                 console.log("Success: ", JSON.parse(response.body));

@@ -11,7 +11,7 @@ module.exports = (app) => {
     // Perform PushFundsTransactions Post operation
     app.post('/transactions/push-funds', authenticate, visa.pushFunds);
 
-    // Perform PushFundsTransactions Post operation
+    // Perform PushFundsTransactions Get operation
     app.get('/transactions/get-push-fund', authenticate, visa.getPushFund);
 
     // Create a new virtual card
